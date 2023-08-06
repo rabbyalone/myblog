@@ -27,7 +27,7 @@ export default function Page() {
       <MdEditor />      
     </div>
     <div>
-      <button> Save Post </button>
+      <button className="bg-primary-500 p-2 mt-1 rounded text-white"> Save Post </button>
     </div>
     </>
   )
