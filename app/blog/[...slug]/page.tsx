@@ -3,23 +3,16 @@ import 'css/prism.css'
 import 'katex/dist/katex.css'
 
 import PageTitle from '@/components/PageTitle'
-import { components } from '@/components/MDXComponents'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import { sortPosts, coreContent } from 'pliny/utils/contentlayer'
-import { allBlogs, allAuthors } from 'contentlayer/generated'
-import type { Authors, Blog } from 'contentlayer/generated'
+import { coreContent } from 'pliny/utils/contentlayer'
+import { allAuthors } from 'contentlayer/generated'
+import type { Authors } from 'contentlayer/generated'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
-import { Metadata } from 'next'
-import siteMetadata from '@/data/siteMetadata'
 
-import ReactDom from 'react-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { getPostById } from './../../../service/post'
 import apiService from 'utils/ApiService'
-import axios from 'axios'
 import { useState, useEffect } from 'react'
 
 let markdown =
@@ -90,11 +83,11 @@ const layouts = {
 //   }
 // }
 
-export const generateStaticParams = async () => {
-  const paths = allBlogs.map((p) => ({ slug: p.slug.split('/') }))
+// export const generateStaticParams = async () => {
+//   const paths = allBlogs.map((p) => ({ slug: p.slug.split('/') }))
 
-  return paths
-}
+//   return paths
+// }
 
 export default function Page({ params }: { params: { slug: string[] } }) {
   const slug = decodeURI(params.slug.join('/'))
@@ -116,8 +109,6 @@ export default function Page({ params }: { params: { slug: string[] } }) {
     fetchData()
   }, post)
 
-  const sortedPosts = sortPosts(allBlogs) as Blog[]
-  const postIndex = sortedPosts.findIndex((p) => p.slug === slug)
   const prev = { path: 'Test', title: 'Previous' }
   const next = { path: '', title: 'next' }
   // const post = getPostById(slug)
@@ -158,7 +149,7 @@ export default function Page({ params }: { params: { slug: string[] } }) {
           </script>
           <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
             {/* <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} /> */}
-            <ReactMarkdown children={markdown} remarkPlugins={[remarkGfm]} />
+            <ReactMarkdown children={post?.content} remarkPlugins={[remarkGfm]} />
           </Layout>
         </>
       )}
