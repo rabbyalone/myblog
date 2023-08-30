@@ -1,3 +1,4 @@
+'use client'
 import { ReactNode } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog, Authors } from 'contentlayer/generated'
@@ -30,8 +31,8 @@ interface LayoutProps {
 }
 
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags } = content
-  const basePath = path.split('/')[0]
+  const { filePath, path, slug, createDate, title, tags } = content
+  const basePath = ''
 
   return (
     <SectionContainer>
@@ -44,8 +45,8 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 <div>
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                    <time dateTime={date}>
-                      {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
+                    <time dateTime={createDate}>
+                      {new Date(createDate).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
                     </time>
                   </dd>
                 </div>

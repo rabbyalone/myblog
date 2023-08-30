@@ -36,13 +36,13 @@ export default function Page() {
   const save = async () => {
     console.log(mark)
     console.log(JSON.stringify(mark))
-    //await apiService.post('/api/posts')
+    //await apiService.post('/api/posts', mark)
   }
 
   return (
     <>
       <CreatePostLayout content={mainContent}>
-        <MDXLayoutRenderer code={author.body.code} />
+        {/* <MDXLayoutRenderer code={author.body.code} /> */}
       </CreatePostLayout>
       <div style={h1Styles}>
         <MDXEditor markdown={'# Hello World'} onChange={(markdown) => editorOnchange(markdown)} />
