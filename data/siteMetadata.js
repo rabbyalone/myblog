@@ -2,21 +2,20 @@
 const siteMetadata = {
   title: '.NET blog from Rabby Hasan',
   author: 'Mohammed Rabby Hasan',
-  headerTitle: 'R.Hasan Blog',
-  description: 'A blog by 7+ years of experienced software developer',
+  headerTitle: 'Rabby Hasan\'s Writings',
+  description: 'See recent writings',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
+  siteUrl: 'https://rabbyhasan.com.bd',
   siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
-  mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'address@yoursite.com',
-  github: 'https://github.com',
-  twitter: 'https://twitter.com/Twitter',
-  facebook: 'https://facebook.com',
+  github: 'https://github.com/rabbyalone',
+  twitter: 'https://twitter.com/rabbyalone',
+  facebook: 'https://facebook.com/rabbyalone',
   youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
+  linkedin: 'https://www.linkedin.com/rabbyalone',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the

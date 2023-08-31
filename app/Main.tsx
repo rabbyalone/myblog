@@ -9,10 +9,22 @@ const MAX_DISPLAY = 5
 export default function Home({ posts }) {
   return (
     <>
+      <div className="flex items-center justify-between mt-7">
+        <div className="space-y-4">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+            <span className="wave">Hi, I'm </span>
+            <span className="text-gray-500 dark:text-blue-400">Md Rabby Hasan</span>
+          </h1>
+          <p className="text-indigo-600 text-xl">
+            Insights from an experienced senior full stack engineer who loves to develop
+            applications from passion.
+          </p>
+        </div>
+      </div>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
-            Latest
+          <h1 className="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-7xl sm:leading-10 md:text-5xl md:leading-14">
+            Recent
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
             {siteMetadata.description}
@@ -29,7 +41,9 @@ export default function Home({ posts }) {
                     <dl>
                       <dt className="sr-only">Published on</dt>
                       <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                        <time dateTime={createDate}>{formatDate(createDate, siteMetadata.locale)}</time>
+                        <time dateTime={createDate}>
+                          {formatDate(createDate, siteMetadata.locale)}
+                        </time>
                       </dd>
                     </dl>
                     <div className="space-y-5 xl:col-span-3">
@@ -82,7 +96,7 @@ export default function Home({ posts }) {
         </div>
       )}
       {siteMetadata.newsletter?.provider && (
-        <div className="flex items-center justify-center pt-4">
+        <div className="flex items-center justify-center">
           <NewsletterForm />
         </div>
       )}
