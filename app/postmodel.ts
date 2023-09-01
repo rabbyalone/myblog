@@ -1,4 +1,4 @@
-import { IsoDateTimeString } from "contentlayer/core"
+import { IsoDateTimeString } from 'contentlayer/core'
 
 export type Post = {
   type: 'Blog'
