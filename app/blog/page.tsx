@@ -24,8 +24,7 @@ export default function BlogPage() {
     }
     fetchPosts()
   }, [])
-  
-  
+
   //const posts = allCoreContent(sortPosts(allBlogs))
   const pageNumber = 1
   const initialDisplayPosts = posts.slice(
