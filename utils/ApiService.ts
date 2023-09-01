@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiService = axios.create({
-  baseURL: 'https://localhost:44301', // Replace with your API base URL
+  baseURL: 'https://rabbyhasanblog.azurewebsites.net', // Replace with your API base URL
 })
 
 export const setAuthToken = (token) => {

@@ -2,7 +2,7 @@
 const siteMetadata = {
   title: '.NET blog from Rabby Hasan',
   author: 'Mohammed Rabby Hasan',
-  headerTitle: 'Rabby Hasan\'s Writings',
+  headerTitle: "Rabby Hasan's Writings",
   description: 'See recent writings',
   language: 'en-us',
   theme: 'system', // system, dark or light

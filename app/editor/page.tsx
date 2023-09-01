@@ -1,15 +1,13 @@
 'use client'
 import { Authors, allAuthors } from 'contentlayer/generated'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
 import CreatePostLayout from '@/layouts/CreatePostLayout'
 import '@mdxeditor/editor/style.css'
 import dynamic from 'next/dynamic'
-import { MouseEventHandler, useState } from 'react'
+import { useState } from 'react'
 import apiService from 'utils/ApiService'
-import MDEditor, { selectWord } from '@uiw/react-md-editor'
+import MDEditor from '@uiw/react-md-editor'
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
 
@@ -17,7 +15,7 @@ const MDXEditor = dynamic(() => import('@mdxeditor/editor').then((mod) => mod.MD
   ssr: false,
 })
 
-export const metadata = genPageMetadata({ title: 'About' })
+// export const metadata = genPageMetadata({ title: 'About' })
 
 const mkdStr = `
 # Markdown Editor
@@ -40,7 +38,7 @@ export default function Page() {
   const author = allAuthors.find((p) => p.slug === 'default') as Authors
   const mainContent = coreContent(author)
   let mark = ''
-  const h1Styles: CSS.Properties = {
+  const h1Styles = {
     border: '1px solid #000',
     height: 'auto',
     position: 'relative',
@@ -77,6 +75,11 @@ export default function Page() {
     setTags(tags)
   }
 
+  const handleEditorChange = (value, event, state) => {
+    // Do something with the updated 'value' state
+    setValue(value)
+  }
+
   return (
     <>
       <CreatePostLayout content={mainContent}>
@@ -107,9 +110,9 @@ export default function Page() {
       </div>
       <h1>Post Body</h1>
       <hr />
-      <div style={h1Styles}>
+      <div>
         {/* <MDXEditor markdown={'# Hello World'} onChange={(markdown) => editorOnchange(markdown)} /> */}
-        <MDEditor height={500} value={value} onChange={setValue} />
+        <MDEditor height={500} value={value} onChange={handleEditorChange} />
       </div>
       <div>
         <button className="bg-primary-500 p-2 mt-1 rounded text-white" onClick={save}>
