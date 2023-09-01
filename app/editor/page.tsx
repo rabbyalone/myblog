@@ -1,15 +1,13 @@
-
+'use client'
 import { Authors, allAuthors } from 'contentlayer/generated'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
 import CreatePostLayout from '@/layouts/CreatePostLayout'
 import '@mdxeditor/editor/style.css'
 import dynamic from 'next/dynamic'
-import { MouseEventHandler, useState } from 'react'
+import { useState } from 'react'
 import apiService from 'utils/ApiService'
-import MDEditor, { selectWord } from '@uiw/react-md-editor'
+import MDEditor from '@uiw/react-md-editor'
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
 
@@ -17,7 +15,7 @@ const MDXEditor = dynamic(() => import('@mdxeditor/editor').then((mod) => mod.MD
   ssr: false,
 })
 
-export const metadata = genPageMetadata({ title: 'About' })
+// export const metadata = genPageMetadata({ title: 'About' })
 
 const mkdStr = `
 # Markdown Editor
