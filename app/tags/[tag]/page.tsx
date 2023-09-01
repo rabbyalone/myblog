@@ -1,3 +1,4 @@
+'use client'
 import { slug } from 'github-slugger'
 import { allCoreContent } from 'pliny/utils/contentlayer'
 import siteMetadata from '@/data/siteMetadata'
@@ -6,6 +7,8 @@ import { allBlogs } from 'contentlayer/generated'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
 import { Metadata } from 'next'
+import { useState, useEffect } from 'react'
+import apiService from 'utils/ApiService'
 
 export async function generateMetadata({ params }: { params: { tag: string } }): Promise<Metadata> {
   const tag = params.tag
@@ -34,10 +37,18 @@ export default function TagPage({ params }: { params: { tag: string } }) {
   const { tag } = params
   // Capitalize first letter and convert space to dash
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
-  const filteredPosts = allCoreContent(
-    allBlogs.filter(
-      (post) => post.draft !== true && post.tags && post.tags.map((t) => slug(t)).includes(tag)
-    )
-  )
-  return <ListLayout posts={filteredPosts} title={title} />
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await apiService.get(`/api/posts/postbytag?tag=${tag}`)
+        setPosts(response.data)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
+      }
+    }
+    fetchPosts()
+  }, [])
+  return <ListLayout posts={posts} title={title} />
 }

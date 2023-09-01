@@ -1,6 +1,9 @@
+'use client'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
+import { useState, useEffect } from 'react'
+import apiService from 'utils/ApiService'
 
 const POSTS_PER_PAGE = 5
 
@@ -12,7 +15,19 @@ export const generateStaticParams = async () => {
 }
 
 export default function Page({ params }: { params: { page: string } }) {
-  const posts = allCoreContent(sortPosts(allBlogs))
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await apiService.get('/api/posts')
+        setPosts(response.data)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
+      }
+    }
+    fetchPosts()
+  }, [])
   const pageNumber = parseInt(params.page as string)
   const initialDisplayPosts = posts.slice(
     POSTS_PER_PAGE * (pageNumber - 1),

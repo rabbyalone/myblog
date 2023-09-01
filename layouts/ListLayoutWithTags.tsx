@@ -10,6 +10,8 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
+import { useEffect, useState } from 'react'
+import apiService from 'utils/ApiService'
 
 interface PaginationProps {
   totalPages: number
@@ -69,9 +71,25 @@ export default function ListLayoutWithTags({
   pagination,
 }: ListLayoutProps) {
   const pathname = usePathname()
-  const tagCounts = tagData as Record<string, number>
-  const tagKeys = Object.keys(tagCounts)
-  const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
+
+  const [tagsObject, setTagsObject] = useState({})
+
+  useEffect(() => {
+    // Function to fetch data from the API
+    async function fetchData() {
+      try {
+        const response = await apiService.get(`/api/posts/tags`)
+        setTagsObject(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    // Call the fetchData function
+    fetchData()
+  }, tagsObject)
+
+  const tags = Object.keys(tagsObject)
 
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
 
@@ -97,12 +115,12 @@ export default function ListLayoutWithTags({
                 </Link>
               )}
               <ul>
-                {sortedTags.map((t) => {
+                {tags.map((t) => {
                   return (
                     <li key={t} className="my-3">
                       {pathname.split('/tags/')[1] === slug(t) ? (
                         <h3 className="inline py-2 px-3 uppercase text-sm font-bold text-primary-500">
-                          {`${t} (${tagCounts[t]})`}
+                          {`${t} (${tagsObject[t]})`}
                         </h3>
                       ) : (
                         <Link
@@ -110,7 +128,7 @@ export default function ListLayoutWithTags({
                           className="py-2 px-3 uppercase text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
                           aria-label={`View posts tagged ${t}`}
                         >
-                          {`${t} (${tagCounts[t]})`}
+                          {`${t} (${tagsObject[t]})`}
                         </Link>
                       )}
                     </li>
@@ -122,14 +140,16 @@ export default function ListLayoutWithTags({
           <div>
             <ul>
               {displayPosts.map((post) => {
-                const { path, date, title, summary, tags } = post
+                const { path, createDate, title, summary, tags } = post
                 return (
                   <li key={path} className="py-5">
                     <article className="space-y-2 flex flex-col xl:space-y-0">
                       <dl>
                         <dt className="sr-only">Published on</dt>
                         <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                          <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                          <time dateTime={createDate}>
+                            {formatDate(createDate, siteMetadata.locale)}
+                          </time>
                         </dd>
                       </dl>
                       <div className="space-y-3">
