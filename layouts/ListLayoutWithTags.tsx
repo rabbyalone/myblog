@@ -12,15 +12,16 @@ import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
 import { useEffect, useState } from 'react'
 import apiService from 'utils/ApiService'
+import { Post } from 'app/postmodel'
 
 interface PaginationProps {
   totalPages: number
   currentPage: number
 }
 interface ListLayoutProps {
-  posts: CoreContent<Blog>[]
+  posts: CoreContent<Post>[]
   title: string
-  initialDisplayPosts?: CoreContent<Blog>[]
+  initialDisplayPosts?: CoreContent<Post>[]
   pagination?: PaginationProps
 }
 
@@ -87,7 +88,7 @@ export default function ListLayoutWithTags({
 
     // Call the fetchData function
     fetchData()
-  }, tagsObject)
+  }, [tagsObject])
 
   const tags = Object.keys(tagsObject)
 

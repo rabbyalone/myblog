@@ -3,8 +3,6 @@
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
-import tagData from 'app/tag-data.json'
-import { genPageMetadata } from 'app/seo'
 import { useState, useEffect } from 'react'
 import apiService from 'utils/ApiService'
 
@@ -26,10 +24,10 @@ export default function Page() {
 
     // Call the fetchData function
     fetchData()
-  }, tagsObject)
-  
+  }, [tagsObject])
+
   const tags = Object.keys(tagsObject)
-  
+
   return (
     <>
       <div className="flex flex-col items-start justify-start divide-y divide-gray-200 dark:divide-gray-700 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0">
