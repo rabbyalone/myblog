@@ -10,19 +10,19 @@ import { Metadata } from 'next'
 import { useState, useEffect } from 'react'
 import apiService from 'utils/ApiService'
 
-export async function generateMetadata({ params }: { params: { tag: string } }): Promise<Metadata> {
-  const tag = params.tag
-  return genPageMetadata({
-    title: tag,
-    description: `${siteMetadata.title} ${tag} tagged content`,
-    alternates: {
-      canonical: './',
-      types: {
-        'application/rss+xml': `${siteMetadata.siteUrl}/tags/${tag}/feed.xml`,
-      },
-    },
-  })
-}
+// export async function generateMetadata({ params }: { params: { tag: string } }): Promise<Metadata> {
+//   const tag = params.tag
+//   return genPageMetadata({
+//     title: tag,
+//     description: `${siteMetadata.title} ${tag} tagged content`,
+//     alternates: {
+//       canonical: './',
+//       types: {
+//         'application/rss+xml': `${siteMetadata.siteUrl}/tags/${tag}/feed.xml`,
+//       },
+//     },
+//   })
+// }
 
 export const generateStaticParams = async () => {
   const tagCounts = tagData as Record<string, number>

@@ -8,7 +8,7 @@ import apiService from 'utils/ApiService'
 
 const POSTS_PER_PAGE = 5
 
-export const metadata = genPageMetadata({ title: 'Blog' })
+//export const metadata = genPageMetadata({ title: 'Blog' })
 
 export default function BlogPage() {
   const [posts, setPosts] = useState([])
