@@ -1,6 +1,7 @@
 import { IsoDateTimeString } from 'contentlayer/core'
 
 export type Post = {
+  id: string
   type: 'Blog'
   title: string
   createDate: IsoDateTimeString
