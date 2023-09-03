@@ -7,15 +7,15 @@ const siteMetadata = {
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://rabbyhasan.com.bd',
-  siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
+  siteRepo: 'https://github.com/rabbyalone/myblog',
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
-  email: 'address@yoursite.com',
+  email: 'rabbyalone@gmail.com',
   github: 'https://github.com/rabbyalone',
   twitter: 'https://twitter.com/rabbyalone',
   facebook: 'https://facebook.com/rabbyalone',
   youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com/rabbyalone',
+  linkedin: 'https://www.linkedin.com/in/rabbyalone',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
