@@ -1,5 +1,9 @@
-# Personal Blog Re Engineered 
+# Personal blog re-engineered 
 ## Changes I made
-- This blog is now backed by a .NET Api
-- MongoDb Atlas used as Database
-- Added markdown editor to create post 
+- A .NET API now backs this blog
+- MongoDB Atlas used as a Database
+- Added markdown editor to create a post
+
+### Markdown Editor
+
+![markdown-editor](https://raw.githubusercontent.com/rabbyalone/myblog/main/public/readme/post-editor.png)
