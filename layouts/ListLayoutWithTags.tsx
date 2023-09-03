@@ -73,7 +73,7 @@ export default function ListLayoutWithTags({
 }: ListLayoutProps) {
   const pathname = usePathname()
 
-  const [tagsObject, setTagsObject] = useState({})
+  const [tagsObject, setTagsObject] = useState([])
 
   useEffect(() => {
     // Function to fetch data from the API
@@ -88,7 +88,7 @@ export default function ListLayoutWithTags({
 
     // Call the fetchData function
     fetchData()
-  }, [tagsObject])
+  }, [tagsObject.values])
 
   const tags = Object.keys(tagsObject)
 

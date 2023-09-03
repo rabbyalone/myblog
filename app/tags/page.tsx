@@ -9,7 +9,7 @@ import apiService from 'utils/ApiService'
 // export const metadata = genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
 
 export default function Page() {
-  const [tagsObject, setTagsObject] = useState({})
+  const [tagsObject, setTagsObject] = useState([])
 
   useEffect(() => {
     // Function to fetch data from the API
@@ -24,7 +24,7 @@ export default function Page() {
 
     // Call the fetchData function
     fetchData()
-  }, [tagsObject])
+  }, [tagsObject.values])
 
   const tags = Object.keys(tagsObject)
 
