@@ -3,12 +3,22 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
+import { useState, useEffect } from 'react'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const MAX_DISPLAY = 5
 
 export default function Home({ posts }) {
+  const [loading, setIsLoading] = useState(true)
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false) // Set isLoading to false after a delay
+    }, 50) // Simulate loading for 3 seconds
+  }, [])
   return (
     <>
+      {loading && <LoadingSpinner />}
+
       <div className="flex items-center justify-between mt-7">
         <div className="space-y-4">
           <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
@@ -40,9 +50,9 @@ export default function Home({ posts }) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { slug, createDate, title, summary, tags } = post
+            const { id, createDate, title, summary, tags } = post
             return (
-              <li key={slug} className="py-12">
+              <li key={id} className="py-12">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                     <dl>
@@ -57,10 +67,7 @@ export default function Home({ posts }) {
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                            <Link
-                              href={`/blog/${slug}`}
-                              className="text-gray-900 dark:text-gray-100"
-                            >
+                            <Link href={`/blog/${id}`} className="text-gray-900 dark:text-gray-100">
                               {title}
                             </Link>
                           </h2>
@@ -76,7 +83,7 @@ export default function Home({ posts }) {
                       </div>
                       <div className="text-base font-medium leading-6">
                         <Link
-                          href={`/blog/${slug}`}
+                          href={`/blog/${id}`}
                           className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                           aria-label={`Read "${title}"`}
                         >

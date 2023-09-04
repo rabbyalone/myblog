@@ -15,6 +15,7 @@ import remarkGfm from 'remark-gfm'
 import apiService from 'utils/ApiService'
 import { useState, useEffect } from 'react'
 import { Post } from 'app/postmodel'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const isProduction = process.env.NODE_ENV === 'production'
 const defaultLayout = 'PostLayout'
@@ -26,17 +27,20 @@ const layouts = {
 
 export default function Page({ params }: { params: { slug: string[] } }) {
   const slug = decodeURI(params.slug.join('/'))
-  console.log(slug)
   const [postSingle, setPost] = useState<Post | undefined>()
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     // Function to fetch data from the API
     async function fetchData() {
       try {
+        setLoading(true)
         const response = await apiService.get(`/api/posts/${slug}`)
         setPost(response.data as Post)
       } catch (error) {
         console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -82,6 +86,8 @@ export default function Page({ params }: { params: { slug: string[] } }) {
 
   return (
     <>
+      {loading && <LoadingSpinner />}
+
       {isProduction && post && 'draft' in post && post.draft === true ? (
         <div className="mt-24 text-center">
           <PageTitle>
