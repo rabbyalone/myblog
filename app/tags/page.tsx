@@ -49,7 +49,7 @@ export default function Page() {
               <div key={t} className="mb-2 mr-5 mt-2">
                 <Tag text={t} />
                 <Link
-                  href={`/tags/${slug(t)}`}
+                  href={`/tags/${t}`}
                   className="-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300"
                   aria-label={`View posts tagged ${t}`}
                 >
