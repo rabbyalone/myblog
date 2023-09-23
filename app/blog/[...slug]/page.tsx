@@ -49,9 +49,15 @@ export default function Page({ params }: { params: { slug: string[] } }) {
   }, [slug])
 
   const post = postSingle as Post
-
-  const prev = { path: 'Test', title: 'Previous' }
-  const next = { path: '', title: 'next' }
+  console.log(post)
+  const prev = {
+    path: `${post?.previous?.id ? `blog/${post?.previous?.id}` : ''}`,
+    title: `Previous - ${post?.previous?.title}`,
+  }
+  const next = {
+    path: `${post?.next?.id ? `blog/${post?.next?.id}` : ''}`,
+    title: `Next - ${post?.next?.title}`,
+  }
   // const post = getPostById(slug)
 
   const authorList = ['default']
