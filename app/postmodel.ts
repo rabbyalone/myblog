@@ -22,4 +22,12 @@ export type Post = {
   filePath?: string
   toc: string
   structuredData: JSON
+  previous?: {
+    id?: string
+    title?: string
+  }
+  next?: {
+    id?: string
+    title?: string
+  }
 }

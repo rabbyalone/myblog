@@ -5,11 +5,12 @@ import { genPageMetadata } from 'app/seo'
 import CreatePostLayout from '@/layouts/CreatePostLayout'
 import '@mdxeditor/editor/style.css'
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
-import apiService from 'utils/ApiService'
+import { useRef, useState } from 'react'
+import apiService, { setAuthToken } from 'utils/ApiService'
 import MDEditor from '@uiw/react-md-editor'
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const MDXEditor = dynamic(() => import('@mdxeditor/editor').then((mod) => mod.MDXEditor), {
   ssr: false,
@@ -52,23 +53,70 @@ export default function Page() {
   }
   const [value, setValue] = useState(mkdStr)
   const [title, setTitle] = useState('')
+  const [blogId, setBlog] = useState('')
+  const [IsSaved, setSaved] = useState(false)
+  const [secret, setSecret] = useState('')
   const [summary, setSummary] = useState('')
   const [tags, setTags] = useState([])
+  const [IsAuthorized, setAuthorized] = useState(false)
+  const [IsEdit, setIsEdit] = useState(false)
+  const [loading, setIsLoading] = useState(false)
 
   const save = async (e) => {
     e.preventDefault()
-    console.log(value)
-    console.log(JSON.stringify(value))
-    const post = {
-      title: title,
-      summary: summary,
-      layout: 'PostSimple',
-      tags: tags,
-      author: 'Mohammed Rabby Hasan',
-      content: JSON.stringify(value),
+    setIsLoading(true)
+    try {
+      const post = {
+        title: title,
+        summary: summary,
+        layout: 'PostSimple',
+        tags: tags,
+        author: 'Mohammed Rabby Hasan',
+        content: JSON.stringify(value),
+      }
+      if (IsEdit) {
+        await apiService.put(`/api/posts/${blogId}`, post)
+      } else {
+        await apiService.post('/api/posts', post)
+      }
+      setSaved(true)
+      setIsLoading(false)
+    } catch (error) {
+      console.error(error)
+      setIsLoading(false)
     }
-    console.log(post)
-    await apiService.post('/api/posts', post)
+  }
+
+  const loadPost = async (e) => {
+    e.preventDefault()
+    try {
+      setIsLoading(true)
+      const response = await apiService.get(`/api/posts/${blogId}`)
+      if (!response.data.id) {
+        setIsLoading(false)
+        return
+      }
+      const parsedContent = JSON.parse(response.data.content)
+      setValue(parsedContent)
+      setTitle(response.data.title)
+      setSummary(response.data.summary)
+      setTags(response.data.tags)
+      setIsEdit(true)
+      setIsLoading(false)
+    } catch (err) {
+      setIsLoading(false)
+    }
+  }
+
+  const authorize = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await apiService.get(`/api/Auth/token?userSecret=${secret}`)
+      await setAuthToken(response.data)
+      setAuthorized(true)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleTagsChange = (tags) => {
@@ -82,10 +130,27 @@ export default function Page() {
 
   return (
     <>
+      {loading && <LoadingSpinner />}
       <CreatePostLayout content={mainContent}>
         {/* <MDXLayoutRenderer code={author.body.code} /> */}
       </CreatePostLayout>
       <div className="container mb-4">
+        <div className="p-2">
+          <input
+            type="text"
+            value={blogId}
+            onChange={(e) => setBlog(e.target.value)}
+            placeholder="Blog Id for update"
+          />
+          <button
+            className="bg-primary-500 p-2 ml-3 rounded text-white disabled:opacity-50"
+            onClick={loadPost}
+            disabled={blogId === ''}
+          >
+            {' '}
+            Load Post{' '}
+          </button>
+        </div>
         <div className="p-2">
           <input
             type="text"
@@ -114,11 +179,32 @@ export default function Page() {
         {/* <MDXEditor markdown={'# Hello World'} onChange={(markdown) => editorOnchange(markdown)} /> */}
         <MDEditor height={500} value={value} onChange={handleEditorChange} />
       </div>
-      <div>
-        <button className="bg-primary-500 p-2 mt-1 rounded text-white" onClick={save}>
-          {' '}
-          Save Post{' '}
-        </button>
+      <div className="mt-3">
+        {!IsAuthorized ? (
+          <div>
+            <input
+              type="text"
+              value={secret}
+              onChange={(e) => setSecret(e.target.value)}
+              placeholder="Secret goes here"
+            />
+            <button
+              className="ml-2 mr-2 bg-green-500 p-2 mt-1 rounded text-white"
+              onClick={authorize}
+            >
+              {' '}
+              Authorize{' '}
+            </button>
+          </div>
+        ) : (
+          <p>Authorized</p>
+        )}
+        {IsAuthorized && (
+          <button className="bg-primary-500 p-2 mt-1 rounded text-white" onClick={save}>
+            {IsEdit ? 'Update Post' : 'Save Post'}
+          </button>
+        )}
+        {IsSaved && <p>Success!!</p>}
       </div>
     </>
   )

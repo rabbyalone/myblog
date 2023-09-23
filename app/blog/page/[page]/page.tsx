@@ -4,6 +4,7 @@ import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
 import { useState, useEffect } from 'react'
 import apiService from 'utils/ApiService'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const POSTS_PER_PAGE = 5
 
@@ -16,14 +17,18 @@ export const generateStaticParams = async () => {
 
 export default function Page({ params }: { params: { page: string } }) {
   const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true)
         const response = await apiService.get('/api/posts')
         setPosts(response.data)
       } catch (error) {
         console.error('Error fetching posts:', error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchPosts()
@@ -39,11 +44,15 @@ export default function Page({ params }: { params: { page: string } }) {
   }
 
   return (
-    <ListLayout
-      posts={posts}
-      initialDisplayPosts={initialDisplayPosts}
-      pagination={pagination}
-      title="All Posts"
-    />
+    <>
+      {loading && <LoadingSpinner />}
+
+      <ListLayout
+        posts={posts}
+        initialDisplayPosts={initialDisplayPosts}
+        pagination={pagination}
+        title="All Posts"
+      />
+    </>
   )
 }
