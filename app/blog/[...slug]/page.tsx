@@ -18,6 +18,7 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 import Head from 'next/head'
 import siteMetadata from '@/data/siteMetadata'
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 
 const isProduction = process.env.NODE_ENV === 'production'
 const defaultLayout = 'PostLayout'
@@ -128,7 +129,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   loading = false
   return (
     <>
-      {loading && <LoadingSpinner />}
+      {/* {loading && <LoadingSpinner />} */}
 
       {isProduction && post && 'draft' in post && post.draft === true ? (
         <div className="mt-24 text-center">
@@ -141,12 +142,14 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
         </div>
       ) : (
         <>
-          <script type="application/ld+json" suppressHydrationWarning>
-            {JSON.stringify(jsonLd)}
-          </script>
-          <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{cont}</ReactMarkdown>
-          </Layout>
+          <Suspense fallback={<LoadingSpinner />}>
+            <script type="application/ld+json" suppressHydrationWarning>
+              {JSON.stringify(jsonLd)}
+            </script>
+            <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{cont}</ReactMarkdown>
+            </Layout>
+          </Suspense>
         </>
       )}
     </>

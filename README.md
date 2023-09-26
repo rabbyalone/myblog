@@ -15,7 +15,6 @@ This React template was originally created by timrix. In the original version, b
 - **Loader**: Integrate a loader for improved user experience.
 - **API Services**: Develop services for interaction with the API.
 
-
 ## Getting Started
 
 ### Step 1: Deploy the API

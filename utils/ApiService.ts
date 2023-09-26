@@ -1,7 +1,9 @@
 import axios from 'axios'
+import https from 'https'
 
 const apiService = axios.create({
-  baseURL: 'https://rabbyhasanblog.azurewebsites.net', // Replace with your API base URL
+  baseURL: 'https://localhost:44301', // Replace with your API base URL
+  httpsAgent: new https.Agent({ rejectUnauthorized: false }),
 })
 
 export const setAuthToken = (token) => {
