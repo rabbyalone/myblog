@@ -16,12 +16,9 @@ export default function Home({ posts }) {
   const handleRouteChangeError = () => setLoading(false)
 
   useEffect(() => {
-    // Add event listeners to the window object
     window.addEventListener('routeChangeStart', handleRouteChangeStart)
     window.addEventListener('routeChangeComplete', handleRouteChangeComplete)
     window.addEventListener('routeChangeError', handleRouteChangeError)
-
-    // Clean up the event listeners when the component unmounts
     return () => {
       window.removeEventListener('routeChangeStart', handleRouteChangeStart)
       window.removeEventListener('routeChangeComplete', handleRouteChangeComplete)
