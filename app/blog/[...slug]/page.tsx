@@ -2,7 +2,7 @@ import 'css/prism.css'
 import 'katex/dist/katex.css'
 
 import PageTitle from '@/components/PageTitle'
-import { MDXDocument, coreContent } from 'pliny/utils/contentlayer'
+import { coreContent } from 'pliny/utils/contentlayer'
 import { allAuthors } from 'contentlayer/generated'
 import type { Authors } from 'contentlayer/generated'
 import PostSimple from '@/layouts/PostSimple'
@@ -15,7 +15,6 @@ import apiService from 'utils/ApiService'
 // import { useState, useEffect } from 'react'
 import { Post } from 'app/postmodel'
 import LoadingSpinner from '@/components/LoadingSpinner'
-import Head from 'next/head'
 import siteMetadata from '@/data/siteMetadata'
 import { Metadata } from 'next'
 import { Suspense } from 'react'
@@ -129,7 +128,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   loading = false
   return (
     <>
-      {/* {loading && <LoadingSpinner />} */}
+      {loading && <LoadingSpinner />}
 
       {isProduction && post && 'draft' in post && post.draft === true ? (
         <div className="mt-24 text-center">
