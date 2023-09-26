@@ -11,8 +11,8 @@ const MAX_DISPLAY = 5
 export default function Home({ posts }) {
   const [loading, setLoading] = useState(false)
 
-  const handleRouteChangeStart = () => setLoading(false)
-  const handleRouteChangeComplete = () => setLoading(true)
+  const handleRouteChangeStart = () => setLoading(true)
+  const handleRouteChangeComplete = () => setLoading(false)
   const handleRouteChangeError = () => setLoading(false)
 
   useEffect(() => {
