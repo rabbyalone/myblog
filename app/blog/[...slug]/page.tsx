@@ -1,4 +1,3 @@
-'use client'
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
@@ -13,9 +12,12 @@ import PostBanner from '@/layouts/PostBanner'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import apiService from 'utils/ApiService'
-import { useState, useEffect } from 'react'
+// import { useState, useEffect } from 'react'
 import { Post } from 'app/postmodel'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import Head from 'next/head'
+import siteMetadata from '@/data/siteMetadata'
+import { Metadata } from 'next'
 
 const isProduction = process.env.NODE_ENV === 'production'
 const defaultLayout = 'PostLayout'
@@ -25,31 +27,65 @@ const layouts = {
   PostBanner,
 }
 
-export default function Page({ params }: { params: { slug: string[] } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string[] }
+}): Promise<Metadata | undefined> {
   const slug = decodeURI(params.slug.join('/'))
-  const [postSingle, setPost] = useState<Post | undefined>()
-  const [loading, setLoading] = useState(false)
+  const response = await apiService.get(`/api/posts/${slug}`)
+  const post = response.data as Post
+  const authorList = ['default']
+  const authorDetails = authorList.map((author) => {
+    const authorResults = allAuthors.find((p) => p.slug === author)
+    return coreContent(authorResults as Authors)
+  })
+  if (!post) {
+    return
+  }
 
-  useEffect(() => {
-    // Function to fetch data from the API
-    async function fetchData() {
-      try {
-        setLoading(true)
-        const response = await apiService.get(`/api/posts/${slug}`)
-        setPost(response.data as Post)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
-      }
+  const publishedAt = new Date(post?.createDate).toISOString()
+  const modifiedAt = new Date(post.lastmod || post.createDate).toISOString()
+  const authors = authorDetails.map((author) => author.name)
+  let imageList = [siteMetadata.socialBanner]
+  if (post.images) {
+    imageList = typeof post.images === 'string' ? [post.images] : post.images
+  }
+  const ogImages = imageList.map((img) => {
+    return {
+      url: img.includes('http') ? img : siteMetadata.siteUrl + img,
     }
+  })
 
-    // Call the fetchData function
-    fetchData()
-  }, [slug])
+  return {
+    title: post.title,
+    description: post.summary,
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      siteName: siteMetadata.title,
+      locale: 'en_US',
+      type: 'article',
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
+      url: './',
+      images: ogImages,
+      authors: authors.length > 0 ? authors : [siteMetadata.author],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.summary,
+      images: imageList,
+    },
+  }
+}
 
-  const post = postSingle as Post
-  console.log(post)
+export default async function Page({ params }: { params: { slug: string[] } }) {
+  const slug = decodeURI(params.slug.join('/'))
+  let loading: boolean = true
+  const response = await apiService.get(`/api/posts/${slug}`)
+  const post = response.data as Post
   const prev = {
     path: `${post?.previous?.id ? `blog/${post?.previous?.id}` : ''}`,
     title: `Previous - ${post?.previous?.title}`,
@@ -89,7 +125,7 @@ export default function Page({ params }: { params: { slug: string[] } }) {
   if (post?.content) {
     cont = JSON.parse(post.content)
   }
-
+  loading = false
   return (
     <>
       {loading && <LoadingSpinner />}
@@ -109,7 +145,6 @@ export default function Page({ params }: { params: { slug: string[] } }) {
             {JSON.stringify(jsonLd)}
           </script>
           <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-            {/* <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} /> */}
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{cont}</ReactMarkdown>
           </Layout>
         </>
