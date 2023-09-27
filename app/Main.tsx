@@ -1,10 +1,10 @@
 import Link from '@/components/Link'
+import LoadingSpinner from '@/components/LoadingSpinner'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
-import { useState, useEffect } from 'react'
-import LoadingSpinner from '@/components/LoadingSpinner'
+import { formatDate } from 'pliny/utils/formatDate'
+import { useEffect, useState } from 'react'
 
 const MAX_DISPLAY = 5
 
@@ -79,13 +79,13 @@ export default function Home({ posts }) {
                         <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                           <dl>
                             <dt className="sr-only">Published on</dt>
-                            <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                            <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400 pl-5">
                               <time dateTime={createDate}>
                                 {formatDate(createDate, siteMetadata.locale)}
                               </time>
                             </dd>
                           </dl>
-                          <div className="space-y-5 xl:col-span-3 bg-white p-3">
+                          <div className="space-y-5 xl:col-span-3 p-3">
                             <div className="space-y-6">
                               <div>
                                 <h2 className="text-2xl font-bold leading-8 tracking-tight">
