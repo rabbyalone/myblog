@@ -120,13 +120,13 @@ export default function ListLayoutWithTags({
                   return (
                     <li key={t} className="my-3">
                       {pathname.split('/tags/')[1] === slug(t) ? (
-                        <h3 className="inline py-2 px-3 uppercase text-sm font-bold text-primary-500">
+                        <h3 className="inline py-2 px-3 bg-blue-100 text-blue-800 text-xs font-medium mr-3 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300  hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white">
                           {`${t.split(' ').join('-')} (${tagsObject[t]})`}
                         </h3>
                       ) : (
                         <Link
                           href={`/tags/${t}`}
-                          className="py-2 px-3 uppercase text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
+                          className="py-2 px-3 bg-blue-100 text-blue-800 text-xs font-medium mr-3 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300  hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white"
                           aria-label={`View posts tagged ${t}`}
                         >
                           {`${t.split(' ').join('-')} (${tagsObject[t]})`}

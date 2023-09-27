@@ -46,16 +46,13 @@ export default function Page() {
           {tags.length === 0 && 'No tags found.'}
           {tags.map((t) => {
             return (
-              <div
-                key={t}
-                className="mb-2 mr-5 mt-2 bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"
-              >
-                <Tag text={t} />
+              <div key={t} className="mb-2 mr-5 mt-2 ">
                 <Link
                   href={`/tags/${t}`}
-                  className="-ml-2 text-sm text-blue-600 dark:text-gray-300 "
+                  className="-ml-2 text-sm text-gray dark:text-gray-300  hover:bg-blue-600 bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300 hover:text-white !hover:bg-blue-600 !dark:hover:bg-blue-600 dark:hover:text-white "
                   aria-label={`View posts tagged ${t}`}
                 >
+                  <Tag text={t} />
                   {` (${tagsObject[t]})`}
                 </Link>
               </div>
