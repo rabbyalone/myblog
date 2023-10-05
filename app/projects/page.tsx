@@ -7,7 +7,25 @@ import remarkGfm from 'remark-gfm'
 export const metadata = genPageMetadata({ title: 'Projects' })
 
 export default function Projects() {
-  const data = `## CEM (CLIENTS & ENGAGEMENTS) - EY.COM
+  const data = `## Soft Skills - RESUME BUILDER
+  
+  **Role:** Senior Full Stack Engineer
+  
+  **Technologies:** .NET 6, .NET Core Web API, Angular 15, Azure Devops, OpenAI(ChatGPT), Azure Active Directory
+  
+  **Project Description:** As a Full Stack Developer, I played a great role in the development of the Soft Skills project, 
+  an internal software solution aimed at managing employee resumes with a strong focus on enhancing their quality through AI integration. Additionally, this platform will do advanced employee search capabilities based on a variety of criteria, empowering our organization in multiple ways.
+
+  Key Contributions:
+  
+  Building the Resume Engine: I led the development of the core resume builder services within the .NET 6 API. This component served as the foundation, enabling our colleagues to easily create and update their resumes, fostering career growth.
+  
+  Creating a User-Friendly Interface: I was responsible for designing and implementing the user interface (UI) using Angular. The goal was to make the resume-building process not just functional but also visually appealing and intuitive.
+  
+  Tackling Complex Features: Throughout the project, I addressed complex feature requests, collaborating closely with the team to find effective solutions. This approach led to continuous improvements in the platform's functionality.
+  
+  
+  ## CEM (CLIENTS & ENGAGEMENTS) - EY.COM
 
   **Role:** Senior Software Engineer
   
