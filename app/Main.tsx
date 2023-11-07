@@ -5,6 +5,7 @@ import siteMetadata from '@/data/siteMetadata'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
 import { formatDate } from 'pliny/utils/formatDate'
 import { useEffect, useState } from 'react'
+import apiService from 'utils/ApiService'
 
 const MAX_DISPLAY = 5
 
@@ -26,6 +27,28 @@ export default function Home({ posts }) {
     }
   }, [])
 
+  const [tagsObject, setTagsObject] = useState([])
+
+  useEffect(() => {
+    // Function to fetch data from the API
+    async function fetchData() {
+      try {
+        setLoading(true)
+        const response = await apiService.get(`/api/posts/tags`)
+        setTagsObject(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    // Call the fetchData function
+    fetchData()
+  }, [tagsObject.values])
+
+  const allTags = Object.keys(tagsObject)
+
   return (
     <>
       {loading ? (
@@ -44,11 +67,11 @@ export default function Home({ posts }) {
               </p>
               <a
                 type="button"
-                href="https://calendly.com/rabbyalone/30min"
+                href="mailto:rabbyalone@gmail.com"
                 target="_blank"
                 className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
               >
-                Book a consultation
+                I am an email away!
               </a>
               <a
                 type="button"
@@ -60,13 +83,23 @@ export default function Home({ posts }) {
             </div>
           </div>
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
-            <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-              <h1 className="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-7xl sm:leading-10 md:text-5xl md:leading-14">
-                Recent
-              </h1>
-              <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-                {siteMetadata.description}
-              </p>
+            <div className="flex flex-row space-x-2">
+              <div className="space-y-2 pb-6 pt-6 md:space-y-2">
+                <h1 className="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-7xl sm:leading-10 md:text-5xl md:leading-14">
+                  Recent
+                </h1>
+                <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+                  {siteMetadata.description}
+                </p>
+              </div>
+              <div className="pt-10 pl-5">
+                {allTags.length === 0 && 'No tags found.'}
+                <div className="flex flex-wrap mb-3">
+                  {allTags.map((tag) => (
+                    <Tag key={tag} text={tag} />
+                  ))}
+                </div>
+              </div>
             </div>
             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
               {!posts.length && 'No posts found.'}
