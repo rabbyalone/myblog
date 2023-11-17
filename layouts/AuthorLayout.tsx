@@ -2,14 +2,6 @@ import { ReactNode } from 'react'
 import type { Authors } from 'contentlayer/generated'
 import SocialIcon from '@/components/social-icons'
 import Image from '@/components/Image'
-import {
-  FaLaptopCode,
-  FaCode,
-  FaDatabase,
-  FaPaintBrush,
-  FaLightbulb,
-  FaCloud,
-} from 'react-icons/fa'
 
 interface Props {
   children: ReactNode
@@ -27,10 +19,7 @@ export default function AuthorLayout({ children, content }: Props) {
             About
           </h1>
         </div>
-        <section
-          id="about-me"
-          className="bg-gradient-to-r from-purple-500 to-pink-500 py-5 px-4 md:px-5 lg:px-5 xl:px-5 relative"
-        >
+        <section id="about-me" className="bg-white py-5 px-4 md:px-5 lg:px-5 xl:px-5 relative">
           <div className="items-start space-y-2 xl:grid xl:grid-cols-3 xl:gap-x-8 xl:space-y-0 ">
             <div className="flex flex-col items-center space-x-2 pt-8 relative z-10">
               {avatar && (
@@ -42,11 +31,11 @@ export default function AuthorLayout({ children, content }: Props) {
                   className="h-48 w-48 rounded-full"
                 />
               )}
-              <h3 className="pb-2 pt-4 text-2xl font-bold leading-8 tracking-tight text-gray-100">
+              <h3 className="pb-2 pt-4 text-2xl font-bold leading-8 tracking-tight text-gray-800">
                 {name}
               </h3>
-              <div className="text-gray-500 dark:text-gray-400">{occupation}</div>
-              <div className="text-gray-500 dark:text-gray-400">{company}</div>
+              <div className="text-gray-900 dark:text-gray-700">{occupation}</div>
+              <div className="text-gray-900 dark:text-gray-700">{company}</div>
               <div className="flex space-x-3 pt-6">
                 <SocialIcon kind="mail" href={`mailto:${email}`} />
                 <SocialIcon kind="github" href={github} />
@@ -56,15 +45,15 @@ export default function AuthorLayout({ children, content }: Props) {
             </div>
             <div className="prose max-w-none pb-8 pt-8 dark:prose-invert xl:col-span-2">
               <div className="container mx-auto text-center relative z-10">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white mb-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 mb-6">
                   Hi, I'm Rabby Hasan
                 </h1>
-                <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8">
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-700 mb-8">
                   Senior Full Stack .NET Engineer
                 </p>
               </div>
               <div className="text-justify !list-none relative z-10 porse"> {children}</div>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-green-400 z-0"></div>
+              {/* <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-green-400 z-0"></div> */}
             </div>
           </div>
         </section>
