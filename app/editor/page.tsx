@@ -61,6 +61,8 @@ export default function Page() {
   const [IsAuthorized, setAuthorized] = useState(false)
   const [IsEdit, setIsEdit] = useState(false)
   const [loading, setIsLoading] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [drafts, setDrafts] = useState<any>([])
 
   const save = async (e) => {
     e.preventDefault()
@@ -118,6 +120,16 @@ export default function Page() {
       const response = await apiService.get(`/api/Auth/token?userSecret=${secret}`)
       await setAuthToken(response.data)
       setAuthorized(true)
+      draftPosts()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const draftPosts = async () => {
+    try {
+      const response = await apiService.get(`/api/posts/drafts`)
+      setDrafts(response.data)
     } catch (error) {
       console.error(error)
     }
@@ -131,10 +143,19 @@ export default function Page() {
     setDraft(!IsDraft)
   }
 
+  const draftClick = (e, el) => {
+    e.preventDefault()
+    setBlog(el)
+    console.log(blogId)
+    loadPost(e)
+  }
+
   const handleEditorChange = (value, event, state) => {
     // Do something with the updated 'value' state
     setValue(value)
   }
+
+  const dp = drafts.values
 
   return (
     <>
@@ -209,15 +230,40 @@ export default function Page() {
               </button>
             </div>
           ) : (
-            <p>Authorized</p>
-          )}
-          {IsAuthorized && (
             <>
-              (
-              <button className="bg-primary-500 p-2 mt-1 rounded text-white" onClick={save}>
-                {IsEdit ? 'Update Post' : 'Save Post'}
-              </button>
-              <button className="bg-sky-500 p-2 mt-1 rounded text-white">See Drafts</button>)
+              <div className="flex flex-row space-x-2">
+                <div className="w-full">
+                  <h3 className="text-xl text-blue-600">Drafts</h3>
+
+                  {drafts.length === 0 && 'No drafts found.'}
+                  <ul>
+                    {drafts.map((el) => {
+                      return (
+                        <div
+                          key={el.id}
+                          className="space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400"
+                        >
+                          <li>
+                            {el.title}{' '}
+                            <button
+                              className="px-3 py-1 text-xs font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                              onClick={(e) => draftClick(e, el.id)}
+                            >
+                              Edit
+                            </button>
+                          </li>
+                        </div>
+                      )
+                    })}
+                  </ul>
+                </div>
+                <div className="justify-end items-end text-align-right justify-items-end w-48">
+                  <button className="bg-primary-500 p-2 mt-1 rounded text-white" onClick={save}>
+                    {IsEdit ? 'Update Post' : 'Save Post'}
+                  </button>
+                  <p>Authorized</p>
+                </div>
+              </div>
             </>
           )}
           {IsSaved && <Toaster position="bottom-right" reverseOrder={false}></Toaster>}
