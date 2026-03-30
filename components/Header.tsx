@@ -1,48 +1,66 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
 import Logo from '@/data/logo.svg'
 import Link from './Link'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
-import SearchButton from './SearchButton'
 
 const Header = () => {
+  const pathname = usePathname()
+
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === href
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
+
   return (
-    <header className="flex items-center justify-between py-3 fixed inset-x-0 top-0 z-40 bg-gray/80 shadow-sm saturate-100 backdrop-blur-[10px]">
-      <div>
-        <Link href="/" aria-label={siteMetadata.headerTitle}>
-          <div className="flex items-center justify-between">
-            <div className="mr-3">
-              <Logo />
-            </div>
-            {typeof siteMetadata.headerTitle === 'string' ? (
-              <div className="hidden h-6 text-2xl font-semibold sm:block">
-                {siteMetadata.headerTitle}
+    <header className="fixed inset-x-0 top-0 z-40 pt-5">
+      <div className="surface-shell mx-auto">
+        <div className="surface-panel flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
+          <Link href="/" aria-label={siteMetadata.headerTitle} className="min-w-0">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[var(--color-surface-strong)] text-[var(--color-fg)]">
+                <Logo className="h-7 w-7" />
               </div>
-            ) : (
-              siteMetadata.headerTitle
-            )}
-            <span className="bg-purple-100 text-purple-800 text-xs font-medium ml-2 mr-2 px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
-              Open to work
-            </span>
-          </div>
-        </Link>
-      </div>
-      <div className="flex items-center leading-5 space-x-4 sm:space-x-6">
-        {headerNavLinks
-          .filter((link) => link.href !== '/')
-          .map((link) => (
+              <p className="truncate text-sm font-semibold tracking-[-0.02em] text-[var(--color-fg)] sm:text-base">
+                Rabby Hasan&apos;s Engineering journal
+              </p>
+            </div>
+          </Link>
+
+          <nav className="hidden items-center gap-1 lg:flex">
+            {headerNavLinks.map((link) => (
+              <Link
+                key={link.title}
+                href={link.href}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                  isActive(link.href)
+                    ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent-strong)]'
+                    : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]'
+                }`}
+              >
+                {link.title}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <ThemeSwitch />
             <Link
-              key={link.title}
-              href={link.href}
-              className="hidden sm:block font-medium text-gray-900 dark:text-gray-100"
+              href={`mailto:${siteMetadata.email}`}
+              className="hidden text-sm font-medium text-[var(--color-muted)] transition hover:text-[var(--color-fg)] md:inline-flex"
             >
-              {link.title}
+              Contact
             </Link>
-          ))}
-        <SearchButton />
-        <ThemeSwitch />
-        <MobileNav />
+            <MobileNav />
+          </div>
+        </div>
       </div>
     </header>
   )

@@ -10,7 +10,7 @@ const POSTS_PER_PAGE = 5
 
 export default function BlogPage() {
   const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -39,13 +39,16 @@ export default function BlogPage() {
 
   return (
     <>
-      {loading && <LoadingSpinner />}
-      <ListLayout
-        posts={posts}
-        initialDisplayPosts={initialDisplayPosts}
-        pagination={pagination}
-        title="All Posts"
-      />
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <ListLayout
+          posts={posts}
+          initialDisplayPosts={initialDisplayPosts}
+          pagination={pagination}
+          title="All Posts"
+        />
+      )}
     </>
   )
 }

@@ -21,18 +21,18 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
     return null
 
   const SocialSvg = components[kind]
+  const iconSize = `${size * 0.25}rem`
 
   return (
     <a
-      className="text-sm text-gray-500 transition hover:text-gray-600"
+      className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[rgba(255,255,255,0.42)] text-[var(--color-fg)] transition duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-[var(--color-accent)] hover:text-[var(--color-accent-strong)] dark:bg-[rgba(255,255,255,0.04)] dark:hover:bg-[rgba(255,255,255,0.08)]"
       target="_blank"
       rel="noopener noreferrer"
       href={href}
+      aria-label={kind}
     >
       <span className="sr-only">{kind}</span>
-      <SocialSvg
-        className={`fill-current text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 h-${size} w-${size}`}
-      />
+      <SocialSvg className="fill-current" style={{ width: iconSize, height: iconSize }} />
     </a>
   )
 }

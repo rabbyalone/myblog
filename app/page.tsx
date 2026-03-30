@@ -8,7 +8,7 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 
 export default function Page() {
   const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -36,10 +36,5 @@ export default function Page() {
   //     slug: 'github-markdown-guide',
   //   },
   // ]
-  return (
-    <>
-      {loading && <LoadingSpinner />}
-      <Main posts={posts} />
-    </>
-  )
+  return <>{loading ? <LoadingSpinner /> : <Main posts={posts} />}</>
 }

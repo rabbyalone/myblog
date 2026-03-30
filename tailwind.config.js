@@ -22,15 +22,21 @@ module.exports = {
         14: '3.5rem',
       },
       fontFamily: {
-        sans: ['var(--font-space-grotesk)', ...fontFamily.sans],
+        sans: ['var(--font-sans)', ...fontFamily.sans],
+        serif: ['var(--font-serif)', ...fontFamily.serif],
       },
       colors: {
-        primary: colors.indigo,
-        gray: colors.gray,
+        primary: colors.amber,
+        gray: colors.stone,
+      },
+      boxShadow: {
+        ambient: '0 24px 60px rgba(67, 51, 39, 0.12)',
+        lift: '0 30px 80px rgba(32, 24, 18, 0.16)',
       },
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
+            color: theme('colors.gray.700'),
             a: {
               color: theme('colors.primary.500'),
               '&:hover': {
@@ -41,17 +47,24 @@ module.exports = {
             'h1,h2': {
               fontWeight: '700',
               letterSpacing: theme('letterSpacing.tight'),
+              color: theme('colors.gray.900'),
             },
             h3: {
               fontWeight: '600',
+              color: theme('colors.gray.900'),
             },
             code: {
-              color: theme('colors.indigo.500'),
+              color: theme('colors.primary.600'),
+            },
+            blockquote: {
+              color: theme('colors.gray.600'),
+              borderLeftColor: theme('colors.primary.300'),
             },
           },
         },
         invert: {
           css: {
+            color: theme('colors.gray.300'),
             a: {
               color: theme('colors.primary.500'),
               '&:hover': {
@@ -61,6 +74,10 @@ module.exports = {
             },
             'h1,h2,h3,h4,h5,h6': {
               color: theme('colors.gray.100'),
+            },
+            blockquote: {
+              color: theme('colors.gray.300'),
+              borderLeftColor: theme('colors.primary.500'),
             },
           },
         },

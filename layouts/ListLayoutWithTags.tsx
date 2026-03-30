@@ -1,23 +1,20 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 'use client'
 
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { slug } from 'github-slugger'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog } from 'contentlayer/generated'
+import type { Post } from 'app/postmodel'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import tagData from 'app/tag-data.json'
-import { useEffect, useState } from 'react'
 import apiService from 'utils/ApiService'
-import { Post } from 'app/postmodel'
 
 interface PaginationProps {
   totalPages: number
   currentPage: number
 }
+
 interface ListLayoutProps {
   posts: CoreContent<Post>[]
   title: string
@@ -32,33 +29,32 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-      <nav className="flex justify-between">
-        {!prevPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
-            Previous
-          </button>
-        )}
-        {prevPage && (
+    <div className="mt-10 border-t border-[var(--color-border)] pt-5">
+      <nav className="flex items-center justify-between gap-4 text-sm text-[var(--color-muted)]">
+        {prevPage ? (
           <Link
             href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
             rel="prev"
+            className="secondary-button px-4 py-2"
           >
             Previous
           </Link>
+        ) : (
+          <span className="opacity-40">Previous</span>
         )}
-        <span>
-          {currentPage} of {totalPages}
+        <span className="font-medium text-[var(--color-fg)]">
+          Page {currentPage} of {totalPages}
         </span>
-        {!nextPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
-            Next
-          </button>
-        )}
-        {nextPage && (
-          <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
+        {nextPage ? (
+          <Link
+            href={`/${basePath}/page/${currentPage + 1}`}
+            rel="next"
+            className="secondary-button px-4 py-2"
+          >
             Next
           </Link>
+        ) : (
+          <span className="opacity-40">Next</span>
         )}
       </nav>
     </div>
@@ -72,111 +68,187 @@ export default function ListLayoutWithTags({
   pagination,
 }: ListLayoutProps) {
   const pathname = usePathname()
-
-  const [tagsObject, setTagsObject] = useState([])
+  const [tagsObject, setTagsObject] = useState<Record<string, number>>({})
+  const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    // Function to fetch data from the API
     async function fetchData() {
       try {
-        const response = await apiService.get(`/api/posts/tags`)
+        const response = await apiService.get('/api/posts/tags')
         setTagsObject(response.data)
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Error fetching tags:', error)
       }
     }
 
-    // Call the fetchData function
     fetchData()
-  }, [tagsObject.values])
+  }, [])
 
-  const tags = Object.keys(tagsObject)
+  const searchSource = posts.filter((post) => {
+    const searchContent = `${post.title} ${post.summary} ${post.tags?.join(' ') ?? ''}`
+    return searchContent.toLowerCase().includes(searchValue.toLowerCase())
+  })
 
-  const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
+  const visiblePosts =
+    searchValue.length > 0
+      ? searchSource
+      : initialDisplayPosts.length > 0
+      ? initialDisplayPosts
+      : posts
+
+  const tags = Object.keys(tagsObject).sort((a, b) => tagsObject[b] - tagsObject[a])
+  const activeTag = decodeURIComponent(pathname.split('/tags/')[1] || '')
+  const introCopy =
+    title === 'All Posts'
+      ? 'A minimal archive for essays on engineering, architecture, and delivery.'
+      : `Entries filed under ${title}.`
 
   return (
-    <>
-      <div>
-        <div className="pb-6 pt-6">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-blue-900 dark:text-blue-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
-            {title}
-          </h1>
+    <div className="pb-10">
+      <section className="animate-fade-up border-b border-[var(--color-border)] pb-8">
+        <div className="grid gap-6 lg:grid-cols-[1fr_18rem] lg:items-end">
+          <div>
+            <span className="eyebrow">Archive</span>
+            <h1 className="section-title mt-5">{title}</h1>
+            <p className="section-copy mt-4 max-w-3xl">{introCopy}</p>
+          </div>
+          <label className="block">
+            <span className="sr-only">Search articles</span>
+            <div className="rounded-[10px] border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-4 py-3">
+              <input
+                aria-label="Search articles"
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search articles"
+                className="w-full border-0 bg-transparent p-0 text-sm text-[var(--color-fg)] placeholder:text-[var(--color-muted)] focus:ring-0"
+              />
+            </div>
+          </label>
         </div>
-        <div className="flex">
-          <div className="hidden mr-8 mt-3 max-h-screen h-full sm:flex flex-wrap bg-gray-50 dark:bg-gray-900/70 shadow-md pt-5 dark:shadow-gray-800/40 rounded min-w-[280px] max-w-[280px]">
-            <div className="py-4 px-6">
-              {pathname.startsWith('/blog') ? (
-                <h3 className="text-primary-500 font-bold uppercase">All Posts</h3>
-              ) : (
+
+        {tags.length > 0 && (
+          <div className="mt-6 flex gap-2 overflow-x-auto pb-1 lg:hidden">
+            <Link
+              href="/blog"
+              className={`luxury-tag whitespace-nowrap ${
+                pathname.startsWith('/blog')
+                  ? 'border-[var(--color-accent)] text-[var(--color-fg)]'
+                  : ''
+              }`}
+            >
+              All posts
+            </Link>
+            {tags.slice(0, 10).map((tag) => (
+              <Link
+                key={tag}
+                href={`/tags/${tag}`}
+                className={`luxury-tag whitespace-nowrap ${
+                  activeTag === tag ? 'border-[var(--color-accent)] text-[var(--color-fg)]' : ''
+                }`}
+              >
+                {tag}
+                <span className="ml-1 text-[0.68rem] text-[var(--color-muted)]">
+                  {tagsObject[tag]}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mt-8 grid gap-8 xl:grid-cols-[16rem_minmax(0,1fr)]">
+        <aside className="hidden xl:block">
+          <div className="xl:sticky xl:top-32">
+            <div className="border-l border-[var(--color-border)] pl-5">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[var(--color-muted)]">
+                Topics
+              </p>
+              <div className="mt-5 flex flex-col gap-1.5">
                 <Link
-                  href={`/blog`}
-                  className="font-bold uppercase text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
+                  href="/blog"
+                  className={`rounded-md px-3 py-2.5 text-sm transition ${
+                    pathname.startsWith('/blog')
+                      ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent-strong)]'
+                      : 'text-[var(--color-fg)] hover:bg-[var(--color-accent-soft)]'
+                  }`}
                 >
-                  All Posts
+                  All posts
                 </Link>
-              )}
-              <ul>
-                {tags.map((t) => {
-                  return (
-                    <li key={t} className="my-3">
-                      {pathname.split('/tags/')[1] === slug(t) ? (
-                        <h3 className="inline py-2 px-3 bg-blue-100 text-blue-800 text-xs font-medium mr-3 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300  hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white">
-                          {`${t.split(' ').join('-')} (${tagsObject[t]})`}
-                        </h3>
-                      ) : (
-                        <Link
-                          href={`/tags/${t}`}
-                          className="py-2 px-3 bg-blue-100 text-blue-800 text-xs font-medium mr-3 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300  hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white"
-                          aria-label={`View posts tagged ${t}`}
-                        >
-                          {`${t.split(' ').join('-')} (${tagsObject[t]})`}
-                        </Link>
-                      )}
-                    </li>
-                  )
-                })}
-              </ul>
+                {tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/tags/${tag}`}
+                    className={`flex items-center justify-between rounded-md px-3 py-2.5 text-sm transition ${
+                      activeTag === tag
+                        ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent-strong)]'
+                        : 'text-[var(--color-fg)] hover:bg-[var(--color-accent-soft)]'
+                    }`}
+                  >
+                    <span>{tag}</span>
+                    <span className="text-[0.68rem] text-[var(--color-muted)]">
+                      {tagsObject[tag]}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-          <div>
+        </aside>
+
+        <div>
+          {!visiblePosts.length ? (
+            <div className="border-b border-[var(--color-border)] px-1 py-8 text-[var(--color-muted)]">
+              No posts found.
+            </div>
+          ) : (
             <ul>
-              {displayPosts.map((post) => {
-                const { id, createDate, title, summary, tags } = post
-                return (
-                  <li key={id} className="py-5">
-                    <Link href={`/blog/${id}`} className="text-gray-900 dark:text-gray-100">
-                      <article className="space-y-2 p-5 flex flex-col xl:space-y-0 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-1 hover:scale-108 duration-300 ...">
-                        <dl>
-                          <dt className="sr-only">Published on</dt>
-                          <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                            <time dateTime={createDate}>
-                              {formatDate(createDate, siteMetadata.locale)}
-                            </time>
-                          </dd>
-                        </dl>
-                        <div className="space-y-3">
-                          <div>
-                            <h2 className="text-2xl font-bold leading-8 tracking-tight">{title}</h2>
-                            <div className="flex flex-wrap">
-                              {tags?.map((tag) => <Tag key={tag} text={tag} />)}
-                            </div>
-                          </div>
-                          <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                            {summary}
-                          </div>
+              {visiblePosts.map((post, index) => (
+                <li
+                  key={post.id}
+                  className={`animate-fade-up border-b border-[var(--color-border)] py-8 ${
+                    index % 2 ? 'animate-delay-150' : ''
+                  }`}
+                >
+                  <article className="transition duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-[2px]">
+                    <div className="grid gap-5 lg:grid-cols-[10rem_minmax(0,1fr)_auto] lg:items-start">
+                      <time
+                        dateTime={post.createDate}
+                        className="block pt-1 text-sm text-[var(--color-muted)]"
+                      >
+                        {formatDate(post.createDate, siteMetadata.locale)}
+                      </time>
+                      <div className="max-w-3xl">
+                        <h2 className="font-serif text-3xl leading-none tracking-[-0.045em] text-[var(--color-fg)]">
+                          <Link href={`/blog/${post.id}`}>{post.title}</Link>
+                        </h2>
+                        <p className="mt-4 text-sm leading-7 text-[var(--color-muted-strong)] sm:text-base">
+                          {post.summary}
+                        </p>
+                        <div className="mt-5 flex flex-wrap">
+                          {post.tags?.map((tag) => <Tag key={tag} text={tag} />)}
                         </div>
-                      </article>
-                    </Link>
-                  </li>
-                )
-              })}
+                      </div>
+                      <div className="lg:flex lg:justify-end">
+                        <Link href={`/blog/${post.id}`} className="read-more-link">
+                          Read more
+                          <span className="animate-button-nudge inline-flex" aria-hidden="true">
+                            -&gt;
+                          </span>
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                </li>
+              ))}
             </ul>
-            {pagination && pagination.totalPages > 1 && (
-              <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
-            )}
-          </div>
+          )}
+
+          {pagination && pagination.totalPages > 1 && !searchValue && (
+            <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
+          )}
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   )
 }

@@ -17,7 +17,7 @@ export const generateStaticParams = async () => {
 
 export default function Page({ params }: { params: { page: string } }) {
   const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -45,14 +45,16 @@ export default function Page({ params }: { params: { page: string } }) {
 
   return (
     <>
-      {loading && <LoadingSpinner />}
-
-      <ListLayout
-        posts={posts}
-        initialDisplayPosts={initialDisplayPosts}
-        pagination={pagination}
-        title="All Posts"
-      />
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <ListLayout
+          posts={posts}
+          initialDisplayPosts={initialDisplayPosts}
+          pagination={pagination}
+          title="All Posts"
+        />
+      )}
     </>
   )
 }

@@ -1,20 +1,28 @@
 import 'css/tailwind.css'
 import 'pliny/search/algolia.css'
 
-import { Space_Grotesk } from 'next/font/google'
-import { Analytics, AnalyticsConfig } from 'pliny/analytics'
-import { SearchProvider, SearchConfig } from 'pliny/search'
-import Header from '@/components/Header'
-import SectionContainer from '@/components/SectionContainer'
 import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import RouteLoader from '@/components/RouteLoader'
+import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
-import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
+import { Manrope, Newsreader } from 'next/font/google'
+import { Analytics, AnalyticsConfig } from 'pliny/analytics'
+import { SearchConfig, SearchProvider } from 'pliny/search'
+import { ThemeProviders } from './theme-providers'
 
-const space_grotesk = Space_Grotesk({
+const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-space-grotesk',
+  variable: '--font-sans',
+})
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-serif',
+  weight: ['500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -61,7 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang={siteMetadata.language}
-      className={`${space_grotesk.variable} scroll-smooth`}
+      className={`${manrope.variable} ${newsreader.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
@@ -70,17 +78,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <link rel="manifest" href="/static/favicons/site.webmanifest" />
       <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#5bbad5" />
       <meta name="msapplication-TileColor" content="#000000" />
-      <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
-      <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#666" />
+      <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfbf8" />
+      <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#11110f" />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
-      <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
+      <body className="bg-[var(--color-bg)] text-[var(--color-fg)] antialiased">
         <ThemeProviders>
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
+          <RouteLoader />
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
           <SectionContainer>
-            <div className="flex h-screen flex-col justify-between font-sans">
+            <div className="page-shell flex min-h-[100dvh] flex-col justify-between font-sans">
               <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
                 <Header />
-                <main className="mb-auto mt-20">{children}</main>
+                <main id="main-content" className="mb-auto pt-28 sm:pt-32">
+                  {children}
+                </main>
               </SearchProvider>
               <Footer />
             </div>
