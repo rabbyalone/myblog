@@ -1,6 +1,4 @@
 'use client'
-import { sortPosts, allCoreContent } from 'pliny/utils/contentlayer'
-import { allBlogs } from 'contentlayer/generated'
 import Main from './Main'
 import { useEffect, useState } from 'react'
 import apiService from 'utils/ApiService'
@@ -24,17 +22,5 @@ export default function Page() {
     }
     fetchPosts()
   }, [])
-  const sortedPosts = sortPosts(allBlogs)
-  //const posts = allCoreContent(sortedPosts)
-  // const posts = [
-  //   {
-  //     title: 'Sample .md file',
-  //     date: '2016-03-08T00:00:00.000Z',
-  //     tags: ['markdown', 'code', 'features'],
-  //     draft: false,
-  //     summary: 'Example of a markdown file with code blocks and syntax highlighting',
-  //     slug: 'github-markdown-guide',
-  //   },
-  // ]
   return <>{loading ? <LoadingSpinner /> : <Main posts={posts} />}</>
 }

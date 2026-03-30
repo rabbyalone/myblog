@@ -1,8 +1,5 @@
 'use client'
-import { Authors, allAuthors } from 'contentlayer/generated'
-import { coreContent } from 'pliny/utils/contentlayer'
 import '@mdxeditor/editor/style.css'
-import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import apiService, { setAuthToken } from 'utils/ApiService'
 import MDEditor from '@uiw/react-md-editor'
@@ -10,10 +7,6 @@ import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import toast, { Toaster } from 'react-hot-toast'
-
-const MDXEditor = dynamic(() => import('@mdxeditor/editor').then((mod) => mod.MDXEditor), {
-  ssr: false,
-})
 
 // export const metadata = genPageMetadata({ title: 'About' })
 
@@ -35,21 +28,6 @@ import MEDitor from '@uiw/react-md-editor';
 `
 
 export default function Page() {
-  const author = allAuthors.find((p) => p.slug === 'default') as Authors
-  const mainContent = coreContent(author)
-  let mark = ''
-  const h1Styles = {
-    border: '1px solid #000',
-    height: 'auto',
-    position: 'relative',
-  }
-  //const { markdown, setMarkdown } = useState(null)
-  //const postBody =
-
-  const editorOnchange = (markdown) => {
-    console.log(markdown)
-    mark = markdown
-  }
   const [value, setValue] = useState(mkdStr)
   const [title, setTitle] = useState('')
   const [blogId, setBlog] = useState('')
@@ -151,11 +129,8 @@ export default function Page() {
   }
 
   const handleEditorChange = (value, event, state) => {
-    // Do something with the updated 'value' state
     setValue(value)
   }
-
-  const dp = drafts.values
 
   return (
     <>

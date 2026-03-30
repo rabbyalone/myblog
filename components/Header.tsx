@@ -9,7 +9,7 @@ import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
 
 const Header = () => {
-  const pathname = usePathname()
+  const pathname = usePathname() ?? ''
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -20,7 +20,7 @@ const Header = () => {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 pt-5">
+    <header className="fixed inset-x-0 top-0 z-40">
       <div className="surface-shell mx-auto">
         <div className="surface-panel flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link href="/" aria-label={siteMetadata.headerTitle} className="min-w-0">

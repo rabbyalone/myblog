@@ -83,7 +83,6 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const slug = decodeURI(params.slug.join('/'))
-  let loading: boolean = true
   const response = await apiService.get(`/api/posts/${slug}`)
   const post = response.data as Post
   const prev = {
@@ -125,11 +124,8 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   if (post?.content) {
     cont = JSON.parse(post.content)
   }
-  loading = false
   return (
     <>
-      {loading && <LoadingSpinner />}
-
       {isProduction && post && 'draft' in post && post.draft === true ? (
         <div className="mt-24 text-center">
           <PageTitle>

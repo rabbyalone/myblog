@@ -7,7 +7,7 @@ import headerNavLinks from '@/data/headerNavLinks'
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
-  const pathname = usePathname()
+  const pathname = usePathname() ?? ''
 
   useEffect(() => {
     document.body.style.overflow = navShow ? 'hidden' : ''
